@@ -1,0 +1,20 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/app/Core/Router.php';
+require_once __DIR__ . '/app/Core/View.php';
+require_once __DIR__ . '/app/Core/Database.php';
+require_once __DIR__ . '/app/Models/ContactMessage.php';
+require_once __DIR__ . '/app/Controllers/PageController.php';
+require_once __DIR__ . '/app/Controllers/ContactController.php';
+$database = Database::connect(__DIR__ . '/config.php');
+$router = new Router();
+$router->get('home', [new PageController(), 'home']);
+$router->get('about', [new PageController(), 'about']);
+$router->get('services', [new PageController(), 'services']);
+$router->get('solutions', [new PageController(), 'solutions']);
+$router->get('careers', [new PageController(), 'careers']);
+$router->get('blog', [new PageController(), 'blog']);
+$router->get('privacy', [new PageController(), 'privacy']);
+$router->get('contact', [new ContactController($database), 'show']);
+$router->post('contact', [new ContactController($database), 'store']);
+$router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', (string) ($_GET['page'] ?? 'home'));
